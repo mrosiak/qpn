@@ -27,7 +27,7 @@ function bindQuizForm() {
         q.Wrong3Answer = $('.new-wrong-answer3').val();
         q.Difficulty = $('.new-difficulty').val();
         savedquestions.push(q);
-        var $div = $('<div class="question">' + q.Question + '</div>');
+        var $div = $('<div class="question">' + "Q" + savedquestions.length+": "+ q.Question + '</div>');
         $div.appendTo($questions);
     });
 }

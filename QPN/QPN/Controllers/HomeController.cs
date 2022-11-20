@@ -6,8 +6,10 @@ using QPN.Database.Repositories;
 using System.IO;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using iTextSharp.tool.xml;
 using Newtonsoft.Json;
+using System.Linq;
+using System;
+using QPN.Helpers;
 
 namespace QPN.Controllers
 {
@@ -15,6 +17,10 @@ namespace QPN.Controllers
     {
         public ActionResult Index()
         {
+            if (Session["UserName"] == null)
+            {
+                return RedirectToAction("Login");
+            }
             var model = new QuizModel();
             return View(model);
         }
@@ -46,7 +52,7 @@ namespace QPN.Controllers
                 var usersRepository = new UsersRepository();
                 var user = usersRepository.GetUser(userModel.Login, MD5Hash(userModel.Password));
                 if (user != null)
-                {                    
+                {
                     Session["UserName"] = user.Login;
                     return RedirectToAction("Index");
                 }
@@ -73,6 +79,7 @@ namespace QPN.Controllers
         public FileResult Export(string ExportData)
         {
             var dataModel = JsonConvert.DeserializeObject<PdfModel[]>(ExportData);
+            var answersSuffix = new[] { "a. ", "b. ", "c. ", "d. ", };
             using (MemoryStream stream = new System.IO.MemoryStream())
             {
                 //StringReader reader = new StringReader(ExportData);
@@ -80,16 +87,22 @@ namespace QPN.Controllers
                 PdfWriter writer = PdfWriter.GetInstance(PdfFile, stream);
                 PdfFile.Open();
                 PdfFile.Add(new Paragraph("QPN"));
-                foreach(var data in dataModel)
+                int i = 1;
+                foreach (var data in dataModel.OrderBy(x => x.Difficulty))
                 {
 
-                    PdfFile.Add(new Paragraph(data.Question));
-                    PdfFile.Add(new Paragraph(data.CorrectAnswer));
-                    PdfFile.Add(new Paragraph(data.Wrong1Answer));
-                    PdfFile.Add(new Paragraph(data.Wrong2Answer));
-                    PdfFile.Add(new Paragraph(data.Wrong3Answer));
-                    PdfFile.Add(new Paragraph(data.Difficulty));
-                    PdfFile.Add(new Paragraph(string.Empty));
+                    PdfFile.Add(new Paragraph(i + ". " + data.Question));
+                    var answers = new[] { data.CorrectAnswer, data.Wrong1Answer, data.Wrong2Answer, data.Wrong3Answer };
+                    var rng = new Random();
+                    rng.Shuffle(answers);
+
+                    for (int j = 0; j < answers.Length; j++)
+                    {
+                        PdfFile.Add(new Paragraph(answersSuffix[j] + answers[j]));
+                    }
+                    PdfFile.Add(new Chunk("\n"));
+                    PdfFile.Add(new Paragraph(" "));
+                    i++;
                 }
                 //XMLWorkerHelper.GetInstance().ParseXHtml(writer, PdfFile, reader);
                 PdfFile.Close();
