@@ -1,0 +1,69 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@model QPN.Models.QuizModel
+<div class="jumbotron">
+    <h1>QPN</h1>
+    <p class="lead">Quizoteka Pamięci Narodowej. Narzędzie do generowanie quizów przy użyciu zasobów znajdujących się pod adresem wyszukiwarki IPN 
+    <a href="https://szukaj.ipn.gov.pl/">szukaj.ipn.gov.pl</a></p>
+    <div class="buttons">
+        <div><a href="https://hackyeah.pl/" class="cbtn btn-dark btn-big">Więcej na temat &raquo;</a></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Quiz</h2>
+        <p>
+            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
+            enables a clean separation of concerns and gives you full control over markup
+            for enjoyable, agile development.
+        </p>
+        <div class="questions">
+
+        </div>
+        <!-- to do collection of questions-->
+        <div class="new-question-box">
+            <input type="text" class="new-question" name="newQuestion" placeholder="Pytanie" />
+            <input type="text" class="new-correct-answer" name="newCorrectAnswer" placeholder="Poprawna odpowiedź" />
+            <div class="new-wrong-aswers">
+                <input type="text" class="new-wrong-answer1" name="newWrongAnswer1" placeholder="1 Zła odpowiedź" />
+                <input type="text" class="new-wrong-answer2" name="newWrongAnswer2" placeholder="2 Zła odpowiedź" />
+                <input type="text" class="new-wrong-answer3" name="newWrongAnswer3" placeholder="3 Zła odpowiedź" />
+
+                <!-- span + edit button  -->
+            </div>
+            <span class="difficulty-label">Trudność</span>
+            <select class="new-difficulty" name="newDifficulty" class="new-difficulty">
+                <option selected value="Podstawowa">Podstawowa</option>
+                <option value="Ponadpodstawowa">Ponadpodstawowa</option>
+                <option value="Poziom rozszerzony">Poziom rozszerzony</option>
+            </select>
+            <div class="add">
+                <a class="cbtn btn-add-dark add-new-question" name="addNewQuestion">Zapisz Pytanie</a>
+            </div>
+
+        </div>
+        <div class="export">
+            <a class="cbtn btn-add-dark add-new-question" name="addNewQuestion">Eksportuj Do pliku</a>
+        </div>
+    </div>
+    <!--
+    <div class="col-md-4">
+        <h2>Wyszukaj w IPN</h2>
+        <p>Użyj pola wyszukiwarki umieszczonego poniżej, aby wyświetlić linki do materiałów w zasobach IPN.</p>
+        @Html.TextBoxFor(m=>m.SearchQuery, new {placeholder= "Szukana fraza" ,@class="query"})
+        <div class="buttons">
+            <div><a href="#" class="cbtn btn-dark search-btn">Wyszukaj&raquo;</a></div>
+        </div>
+        <div class="results"></div>
+    </div>
+        -->
+    <div class="col-md-8">
+        <h2>Wyszukaj w IPN</h2><p>Użyj pola wyszukiwarki umieszczonego poniżej, aby wyświetlić linki do materiałów w zasobach IPN.</p>
+        <p>Kliknij na wyniki wyszukiwania, aby otworzyc strony w nowymoknie co ułatwi skopiowanie materiału do budowy pytań i odpowiedzi.</p>
+        <div class="iframe">
+            <iframe id="frame" src="https://szukaj.ipn.gov.pl/" width="650" height="900" frameBorder="0">Browser not compatible.</iframe>
+        </div>
+    </div>
+</div>
