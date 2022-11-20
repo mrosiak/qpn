@@ -45,7 +45,11 @@
 
         </div>
         <div class="export">
-            <a class="cbtn btn-add-dark add-new-question" name="addNewQuestion">Eksportuj Do pliku</a>
+            @using (Html.BeginForm("Export", "Home", FormMethod.Post))
+            {
+                <input type="hidden" name="ExportData" />
+                <input class="cbtn btn-add-dark add-new-question" type="submit" id="btnSubmit" value="Eksportuj Do pliku" />
+            }
         </div>
     </div>
     <!--

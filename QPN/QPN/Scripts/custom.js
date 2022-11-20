@@ -2,8 +2,14 @@
     console.log("ready!");
     bindSearch();
     bindQuizForm();
+    bindExport();
 });
 var savedquestions = [];
+function bindExport() {
+    $("#btnSubmit").click(function () {
+        $("input[name='ExportData']").val(JSON.stringify(savedquestions));
+    });
+}
 function bindSearch() {
     //let $search = $('.search-btn');
    // let $query = $('.query');

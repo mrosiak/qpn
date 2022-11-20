@@ -3,6 +3,11 @@ using System.Security.Cryptography;
 using QPN.Models;
 using System.Text;
 using QPN.Database.Repositories;
+using System.IO;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.tool.xml;
+using Newtonsoft.Json;
 
 namespace QPN.Controllers
 {
@@ -62,6 +67,34 @@ namespace QPN.Controllers
             }
 
             return strBuilder.ToString();
+        }
+        [HttpPost]
+        [ValidateInput(false)]
+        public FileResult Export(string ExportData)
+        {
+            var dataModel = JsonConvert.DeserializeObject<PdfModel[]>(ExportData);
+            using (MemoryStream stream = new System.IO.MemoryStream())
+            {
+                //StringReader reader = new StringReader(ExportData);
+                Document PdfFile = new Document(PageSize.A4);
+                PdfWriter writer = PdfWriter.GetInstance(PdfFile, stream);
+                PdfFile.Open();
+                PdfFile.Add(new Paragraph("QPN"));
+                foreach(var data in dataModel)
+                {
+
+                    PdfFile.Add(new Paragraph(data.Question));
+                    PdfFile.Add(new Paragraph(data.CorrectAnswer));
+                    PdfFile.Add(new Paragraph(data.Wrong1Answer));
+                    PdfFile.Add(new Paragraph(data.Wrong2Answer));
+                    PdfFile.Add(new Paragraph(data.Wrong3Answer));
+                    PdfFile.Add(new Paragraph(data.Difficulty));
+                    PdfFile.Add(new Paragraph(string.Empty));
+                }
+                //XMLWorkerHelper.GetInstance().ParseXHtml(writer, PdfFile, reader);
+                PdfFile.Close();
+                return File(stream.ToArray(), "application/pdf", "ExportData.pdf");
+            }
         }
     }
 }
